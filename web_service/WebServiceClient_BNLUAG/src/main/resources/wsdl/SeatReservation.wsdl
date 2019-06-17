@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="http://www.iit.bme.hu/soi/hw/SeatReservation"  
+	xmlns:tns="http://www.iit.bme.hu/soi/hw/SeatReservation"
+	xmlns:ns0="http://www.iit.bme.hu/soi/hw/SeatReservation"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+	xmlns:wsp="http://www.w3.org/ns/ws-policy"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	xmlns:wsoma="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization"
+	xmlns:wsa="http://www.w3.org/2005/08/addressing" 
+	xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+	xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+	xmlns:wsrmp="http://docs.oasis-open.org/ws-rx/wsrmp/200702"
+	xmlns:wsat="http://schemas.xmlsoap.org/ws/2004/10/wsat"
+	xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702"
+	xmlns:wst="http://docs.oasis-open.org/ws-sx/ws-trust/200512"
+	xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"	
+>
+	<wsdl:types>
+		<xs:schema>
+			<xs:import schemaLocation="SeatReservation.xsd" namespace="http://www.iit.bme.hu/soi/hw/SeatReservation"/>
+		</xs:schema>
+	</wsdl:types>
+
+		<wsdl:message name="ICinema_Init_InputMessage">
+			<wsdl:part name="parameters" element="ns0:Init"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Init_OutputMessage">
+			<wsdl:part name="parameters" element="ns0:InitResponse"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Init_CinemaException">
+			<wsdl:part name="fault" element="ns0:CinemaException"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_GetAllSeats_InputMessage">
+			<wsdl:part name="parameters" element="ns0:GetAllSeats"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_GetAllSeats_OutputMessage">
+			<wsdl:part name="parameters" element="ns0:GetAllSeatsResponse"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_GetAllSeats_CinemaException">
+			<wsdl:part name="fault" element="ns0:CinemaException"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_GetSeatStatus_InputMessage">
+			<wsdl:part name="parameters" element="ns0:GetSeatStatus"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_GetSeatStatus_OutputMessage">
+			<wsdl:part name="parameters" element="ns0:GetSeatStatusResponse"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_GetSeatStatus_CinemaException">
+			<wsdl:part name="fault" element="ns0:CinemaException"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Lock_InputMessage">
+			<wsdl:part name="parameters" element="ns0:Lock"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Lock_OutputMessage">
+			<wsdl:part name="parameters" element="ns0:LockResponse"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Lock_CinemaException">
+			<wsdl:part name="fault" element="ns0:CinemaException"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Unlock_InputMessage">
+			<wsdl:part name="parameters" element="ns0:Unlock"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Unlock_OutputMessage">
+			<wsdl:part name="parameters" element="ns0:UnlockResponse"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Unlock_CinemaException">
+			<wsdl:part name="fault" element="ns0:CinemaException"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Reserve_InputMessage">
+			<wsdl:part name="parameters" element="ns0:Reserve"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Reserve_OutputMessage">
+			<wsdl:part name="parameters" element="ns0:ReserveResponse"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Reserve_CinemaException">
+			<wsdl:part name="fault" element="ns0:CinemaException"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Buy_InputMessage">
+			<wsdl:part name="parameters" element="ns0:Buy"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Buy_OutputMessage">
+			<wsdl:part name="parameters" element="ns0:BuyResponse"/>
+		</wsdl:message>
+
+		<wsdl:message name="ICinema_Buy_CinemaException">
+			<wsdl:part name="fault" element="ns0:CinemaException"/>
+		</wsdl:message>
+
+		<wsdl:portType name="ICinema">
+			<wsdl:operation name="Init">
+				<wsdl:input wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/Init" message="ns0:ICinema_Init_InputMessage"/>
+				<wsdl:output wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/InitResponse" message="ns0:ICinema_Init_OutputMessage"/>
+				<wsdl:fault wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/InitFault/CinemaException" message="ns0:ICinema_Init_CinemaException" name="CinemaException"/>
+			</wsdl:operation>
+			<wsdl:operation name="GetAllSeats">
+				<wsdl:input wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/GetAllSeats" message="ns0:ICinema_GetAllSeats_InputMessage"/>
+				<wsdl:output wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/GetAllSeatsResponse" message="ns0:ICinema_GetAllSeats_OutputMessage"/>
+				<wsdl:fault wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/GetAllSeatsFault/CinemaException" message="ns0:ICinema_GetAllSeats_CinemaException" name="CinemaException"/>
+			</wsdl:operation>
+			<wsdl:operation name="GetSeatStatus">
+				<wsdl:input wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/GetSeatStatus" message="ns0:ICinema_GetSeatStatus_InputMessage"/>
+				<wsdl:output wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/GetSeatStatusResponse" message="ns0:ICinema_GetSeatStatus_OutputMessage"/>
+				<wsdl:fault wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/GetSeatStatusFault/CinemaException" message="ns0:ICinema_GetSeatStatus_CinemaException" name="CinemaException"/>
+			</wsdl:operation>
+			<wsdl:operation name="Lock">
+				<wsdl:input wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/Lock" message="ns0:ICinema_Lock_InputMessage"/>
+				<wsdl:output wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/LockResponse" message="ns0:ICinema_Lock_OutputMessage"/>
+				<wsdl:fault wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/LockFault/CinemaException" message="ns0:ICinema_Lock_CinemaException" name="CinemaException"/>
+			</wsdl:operation>
+			<wsdl:operation name="Unlock">
+				<wsdl:input wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/Unlock" message="ns0:ICinema_Unlock_InputMessage"/>
+				<wsdl:output wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/UnlockResponse" message="ns0:ICinema_Unlock_OutputMessage"/>
+				<wsdl:fault wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/UnlockFault/CinemaException" message="ns0:ICinema_Unlock_CinemaException" name="CinemaException"/>
+			</wsdl:operation>
+			<wsdl:operation name="Reserve">
+				<wsdl:input wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/Reserve" message="ns0:ICinema_Reserve_InputMessage"/>
+				<wsdl:output wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/ReserveResponse" message="ns0:ICinema_Reserve_OutputMessage"/>
+				<wsdl:fault wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/ReserveFault/CinemaException" message="ns0:ICinema_Reserve_CinemaException" name="CinemaException"/>
+			</wsdl:operation>
+			<wsdl:operation name="Buy">
+				<wsdl:input wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/Buy" message="ns0:ICinema_Buy_InputMessage"/>
+				<wsdl:output wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/BuyResponse" message="ns0:ICinema_Buy_OutputMessage"/>
+				<wsdl:fault wsaw:action="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/BuyFault/CinemaException" message="ns0:ICinema_Buy_CinemaException" name="CinemaException"/>
+			</wsdl:operation>
+		</wsdl:portType>
+
+	<wsdl:binding name="ICinema_HttpSoap11_Binding" type="ns0:ICinema">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="Init">
+			<soap:operation style="document" soapAction="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/Init"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="CinemaException">
+				<soap:fault name="CinemaException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="GetAllSeats">
+			<soap:operation style="document" soapAction="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/GetAllSeats"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="CinemaException">
+				<soap:fault name="CinemaException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="GetSeatStatus">
+			<soap:operation style="document" soapAction="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/GetSeatStatus"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="CinemaException">
+				<soap:fault name="CinemaException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="Lock">
+			<soap:operation style="document" soapAction="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/Lock"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="CinemaException">
+				<soap:fault name="CinemaException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="Unlock">
+			<soap:operation style="document" soapAction="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/Unlock"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="CinemaException">
+				<soap:fault name="CinemaException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="Reserve">
+			<soap:operation style="document" soapAction="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/Reserve"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="CinemaException">
+				<soap:fault name="CinemaException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="Buy">
+			<soap:operation style="document" soapAction="http://www.iit.bme.hu/soi/hw/SeatReservation/ICinema/Buy"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="CinemaException">
+				<soap:fault name="CinemaException" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<wsdl:service name="CinemaService">
+		<wsdl:port name="ICinema_HttpSoap11_Port" binding="ns0:ICinema_HttpSoap11_Binding">
+			<soap:address location="http://localhost:8080/WebService_NEPTUN/Cinema"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

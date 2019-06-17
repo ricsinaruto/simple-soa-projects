@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>soi</groupId>
+  <artifactId>microservices_BNLUAG_parent</artifactId>
+  <name>Microservices HW parent</name>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  
+  <properties>
+    <version.thorntail>2.3.0.Final</version.thorntail>
+    <version.protobuf>3.6.1</version.protobuf>
+    <version.resteasy>3.6.3.Final</version.resteasy>
+    <failOnMissingWebXml>false</failOnMissingWebXml>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.thorntail</groupId>
+        <artifactId>bom</artifactId>
+        <version>${version.thorntail}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- Protocol Buffers -->
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+      <version>${version.protobuf}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java-util</artifactId>
+      <version>${version.protobuf}</version>
+    </dependency>
+    <!-- Java EE 8 dependency -->
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>8.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- Resteasy client -->
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-client</artifactId>
+      <version>${version.resteasy}</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- Wildfly Swarm Fractions -->
+    <dependency>
+      <groupId>io.thorntail</groupId>
+      <artifactId>logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.thorntail</groupId>
+      <artifactId>jaxrs</artifactId>
+    </dependency>
+  </dependencies>
+
+	<profiles>
+		<profile>
+			<id>generate-sources</id>
+			<properties>
+				<generate.sources.phase>generate-sources</generate.sources.phase>
+			</properties>
+		</profile>
+		<profile>
+			<id>default</id>
+			<activation>
+			   <activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<generate.sources.phase>none</generate.sources.phase>
+			</properties>
+		</profile>
+	</profiles>
+
+  <modules>
+    <!-- Insert modules here -->
+    <module>Microservices_BNLUAG_Banking</module>
+    <module>Microservices_BNLUAG_Movies</module>
+    <module>Microservices_BNLUAG_Ticketing</module>
+  </modules>
+</project>

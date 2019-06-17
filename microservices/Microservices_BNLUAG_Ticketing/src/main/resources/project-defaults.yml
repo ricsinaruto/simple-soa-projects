@@ -1,0 +1,12 @@
+logger:
+    level: INFO
+swarm:
+    bind:
+        address: 127.0.0.1
+    port:
+        offset: 0
+microservices:
+    movies:
+        url: http://localhost:8081
+    banking:
+        url: http://localhost:8082

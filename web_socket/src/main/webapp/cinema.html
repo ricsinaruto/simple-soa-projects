@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Seat reservation</title>
+    <script>
+        function getRootUri() {
+            return "ws://" + (document.location.hostname == "" ? "localhost" : document.location.hostname) + ":" +
+                    (document.location.port == "" ? "8080" : document.location.port);
+        }
+
+        var ws = null;
+        var wsUrl = null;
+        var rowCount = 10;
+        var colCount = 20;
+        var seatSize = 30;
+        var seatPadding = 2;
+        var canvas = null;
+        var context = null;
+        var mousePos = null;
+        var selectedSeat = null;
+
+        function init() {
+            // és az így keletkező címre kell kapcsolódni a WebSocket-tel:
+            wsUrl = getRootUri() + "/WebSocket_BNLUAG/cinema";
+        	ws = new WebSocket(wsUrl);
+            // A következő sorok a canvas-t inicializálják:
+            canvas = document.getElementById('room');
+            canvas.addEventListener('mousemove', function (evt) { mousePos = getMousePos(canvas, evt); });
+            canvas.addEventListener('click', function (evt) { mousePos = getMousePos(canvas, evt); selectSeat(); });
+            context = canvas.getContext('2d');
+			initWebSocket();
+        }
+        
+        function initWebSocket() {
+        	ws.onopen = function(evt) {
+				onOpen(evt);
+			};
+			ws.onmessage = function(evt) {
+				onMessage(evt);
+			};
+			ws.onerror = function(evt) {
+				onError(evt);
+				websocket = null;
+			};
+			ws.onclose = function(evt) {
+				onClose(evt);
+				websocket = null;
+			};
+        }
+
+        // TODO: ide jöhetnek a WebSocket kezeléssel kapcsolatos függvények
+		function init_room() {
+        	selectedSeat = null;
+        	rowCount = document.getElementById('rows').value;
+        	colCount = document.getElementById('columns').value;
+        	ws.send('{"type":"initRoom", "rows":'+rowCount+', "columns":'+colCount+'}');
+        	draw();
+        }
+        
+        function refresh_room() {
+        	ws.send('{"type":"getRoomSize"}');
+        }
+        
+        function reserve_seat() {
+        	ws.send('{"type":"reserveSeat", "lockId": "'+selectedSeat+'"}');
+        }
+        
+        function onOpen(evt) {
+
+		}
+		function onMessage(evt) {
+			if (evt.data) {
+				msg = JSON.parse(evt.data);
+				
+				if (msg.type == "roomSize") {
+					rowCount = msg.rows;
+					colCount = msg.columns;
+					canvas.height = rowCount * seatSize;
+		            canvas.width = colCount * seatSize;
+					ws.send('{"type":"updateSeats"}');
+				}
+				
+				else if (msg.type == "seatStatus") {
+					drawSeat(msg.row - 1, msg.column - 1, msg.status);
+				}
+				
+				else if (msg.type == "error") {
+					alert(msg.message);
+				}
+				
+				else if (msg.type == "lockResult") {
+					selectedSeat = msg.lockId;
+				}
+			}
+		}
+		function onError(evt) {
+
+		}
+		function onClose(evt) {
+			
+		}
+		
+        // Kirajzolja a canvas-t csupa szabad székekkel:
+        function draw() {
+            canvas.height = rowCount * seatSize;
+            canvas.width = colCount * seatSize;
+            for (i = 0; i < rowCount; i++) {
+                for (j = 0; j < colCount; j++) {
+                    drawSeat(i, j, "free");
+                }
+            }
+        }
+
+        // Kirajzol egy széket a canvas-re:
+        function drawSeat(row, col, status) {
+            context.beginPath();
+            switch (status) {
+                case "free": context.fillStyle = 'green'; break;
+                case "locked": context.fillStyle = 'yellow'; break;
+                case "reserved": context.fillStyle = 'red'; selectedSeat=null; break;
+                default: context.fillStyle = 'gray'; break;
+            }
+            context.rect(col * seatSize, row * seatSize,
+                seatSize - seatPadding, seatSize - seatPadding);
+            context.fill();
+            context.closePath();
+        }
+
+        // Kiválaszt egy széket, és zárolja is az adott széket.
+        // Egyszerre csak egy szék lehet zárolva!
+        function selectSeat() {
+            var row = Math.floor(mousePos.y / seatSize);
+            var col = Math.floor(mousePos.x / seatSize);
+            if (selectedSeat != null) {
+                ws.send('{"type":"unlockSeat", "lockId": "'+selectedSeat+'"}');
+            }
+            ws.send('{"type": "lockSeat", "row": '+row+', "column": '+col+'}');
+        }
+
+        // Megadja az egér pozícióját a canvas-en belül:
+        function getMousePos(canvas, evt) {
+            var rect = canvas.getBoundingClientRect();
+            return {
+                x: evt.clientX - rect.left,
+                y: evt.clientY - rect.top
+            };
+        }
+
+        window.addEventListener("load", init, false);
+
+    </script>
+</head>
+<!-- Az ezt a sort követő részben tilos az "id" és "name" attribútumok értékének megváltoztatása, illetve
+    bármely HTML tag törlése. TODO: eseménykezelők hozzáadhatók az egyes elemekhez. -->
+<body>
+    <h1 style="text-align: center;">Seat reservation</h1>
+
+    <br />
+
+    <div style="text-align: center;">
+        <!-- Az alábbi gomb hatására le kell kérdezni a moziterem méretét és az összes szék
+            státuszát, és ki kell rajzolni a székeket a canvas-re. -->
+        <input onclick="refresh_room()" id="refreshButton" value="Refresh" type="button"/><br />
+        <!-- Az alábbi input mezőben megadható a moziterem sorainak száma: -->
+        <label for="rows">row count:</label><input id="rows" name="rows" value="10" type="text" size="5"/>
+        <!-- Az alábbi input mezőben megadható a moziterem oszlopainak száma: -->
+        <label for="columns">column count:</label><input id="columns" name="columns" value="20" type="text" size="5"/>
+        <!-- Az alábbi gombnak az előző két mezőben megadott értékekkel kell inicializálnia
+            a mozitermet: -->
+        <input onclick="init_room()" id="initButton" value="Init" type="button"/><br />
+        <!-- Az alábbi gombnak le kell foglalnia az éppen aktuálisan zárolt széket: -->
+        <input onclick="reserve_seat()" id="reserveButton" value="Reserve" type="button"/><br />
+        <!-- Ez a canvas, ide lesznek kirajzolva a székek: -->
+        <canvas id="room"></canvas>
+    </div>
+</body>
+</html>

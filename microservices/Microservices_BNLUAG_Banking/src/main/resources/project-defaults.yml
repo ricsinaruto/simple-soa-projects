@@ -1,0 +1,7 @@
+logger:
+    level: INFO
+swarm:
+    bind:
+        address: 127.0.0.1
+    port:
+        offset: 2

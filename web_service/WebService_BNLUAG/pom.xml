@@ -1,0 +1,259 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>soi.ws</groupId>
+  <artifactId>WebService_BNLUAG</artifactId>
+  <packaging>war</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  
+    <properties>
+        <!-- Explicitly declaring the source encoding eliminates the following 
+            message: -->
+        <!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered 
+            resources, i.e. build is platform dependent! -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- JBoss dependency versions -->
+        <version.wildfly.maven.plugin>2.0.0.Final</version.wildfly.maven.plugin>
+
+        <!-- Define the version of the JBoss BOMs we want to import to specify 
+            tested stacks. -->
+        <version.jboss.bom>15.0.1.Final</version.jboss.bom>
+
+        <!-- other plugin versions -->
+        <version.surefire.plugin>3.0.0-M3</version.surefire.plugin>
+        <version.war.plugin>3.2.2</version.war.plugin>
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- JBoss distributes a complete set of Java EE 7 APIs including a Bill
+                of Materials (BOM). A BOM specifies the versions of a "stack" (or a collection) 
+                of artifacts. We use this here so that we always get the correct versions 
+                of artifacts. Here we use the jboss-javaee-7.0-with-tools stack (you can
+                read this as the JBoss stack of the Java EE 7 APIs, with some extras tools
+                for your project, such as Arquillian for testing). -->
+            <dependency>
+                <groupId>org.wildfly.bom</groupId>
+                <artifactId>wildfly-javaee8-with-tools</artifactId>
+                <version>${version.jboss.bom}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+
+        <!-- First declare the APIs we depend on and need for compilation. All 
+            of them are provided by JBoss WildFly -->
+
+        <!-- Import the CDI API, we use provided scope as the API is included in 
+            JBoss WildFly -->
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- Import the Common Annotations API (JSR-250), we use provided scope 
+            as the API is included in JBoss WildFly -->
+		<dependency>
+			<groupId>org.jboss.spec.javax.annotation</groupId>
+			<artifactId>jboss-annotations-api_1.3_spec</artifactId>
+            <scope>provided</scope>
+		</dependency>
+
+        <!-- Import the JAX-WS API, we use provided scope as the API is included in 
+            JBoss WildFly -->
+		<dependency>
+			<groupId>org.jboss.spec.javax.xml.ws</groupId>
+			<artifactId>jboss-jaxws-api_2.3_spec</artifactId>
+            <scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>javax.jws</groupId>
+		    <artifactId>javax.jws-api</artifactId>
+		    <version>1.1</version>
+            <scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
+		    <version>2.3.1</version>
+            <scope>provided</scope>
+		</dependency>
+
+        <!-- Import the Servlet API, we use provided scope as the API is included in 
+            JBoss WildFly -->
+		<dependency>
+			<groupId>org.jboss.spec.javax.servlet</groupId>
+			<artifactId>jboss-servlet-api_4.0_spec</artifactId>
+            <scope>provided</scope>
+		</dependency>  
+    </dependencies>
+	
+    <build>
+        <!-- Maven will append the version to the finalName (which is the name 
+            given to the generated war, and hence the context root) -->
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+	        <plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-compiler-plugin</artifactId>
+			    <version>3.8.0</version>
+			    <configuration>
+			        <release>11</release>
+			    </configuration>
+			</plugin>
+        
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <dependencies>
+			        <dependency>
+			            <groupId>com.sun.xml.ws</groupId>
+			            <artifactId>jaxws-tools</artifactId>
+			            <version>2.3.2</version>
+			        </dependency>                          
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>mkdir</id>
+                        <phase>${generate.sources.phase}</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>cmd.exe</executable>
+                            <arguments>
+                                <argument>/C</argument>
+                                <argument>if</argument>
+                                <argument>not</argument>
+                                <argument>exist</argument>
+                                <argument>target\generated-sources\java</argument>
+                                <argument>mkdir</argument>
+                                <argument>target\generated-sources\java</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>wsimport</id>
+                        <phase>${generate.sources.phase}</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+				        <configuration>
+					          <includeProjectDependencies>false</includeProjectDependencies>
+					          <includePluginDependencies>true</includePluginDependencies>
+                            <mainClass>com.sun.tools.ws.WsImport</mainClass>
+                            <longModulepath>false</longModulepath>
+                            <arguments>
+                                <argument>-verbose</argument>
+                                <argument>-extension</argument>
+                                <argument>-Xnocompile</argument>
+                                <argument>-p</argument>
+                                <argument>seatreservation</argument>
+                                <argument>-wsdllocation</argument>
+                                <argument>/WEB-INF/wsdl/SeatReservation.wsdl</argument>
+                                <argument>-s</argument>
+                                <argument>target/generated-sources/java</argument>
+                                <argument>src/main/webapp/WEB-INF/wsdl/SeatReservation.wsdl</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/generated-sources/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>${version.war.plugin}</version>
+			</plugin>
+			<!-- The WildFly plugin deploys your war to a local WildFly container -->
+			<!-- To use, run: mvn package wildfly:deploy -->
+			<plugin>
+				<groupId>org.wildfly.plugins</groupId>
+				<artifactId>wildfly-maven-plugin</artifactId>
+				<version>${version.wildfly.maven.plugin}</version>
+			</plugin>
+        </plugins>
+		
+        <pluginManagement>
+        	<plugins>
+        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        		<plugin>
+        			<groupId>org.eclipse.m2e</groupId>
+        			<artifactId>lifecycle-mapping</artifactId>
+        			<version>1.0.0</version>
+        			<configuration>
+        				<lifecycleMappingMetadata>
+        					<pluginExecutions>
+        						<pluginExecution>
+        							<pluginExecutionFilter>
+        								<groupId>
+        									org.codehaus.mojo
+        								</groupId>
+        								<artifactId>
+        									exec-maven-plugin
+        								</artifactId>
+        								<versionRange>
+        									[1.6.0,)
+        								</versionRange>
+        								<goals>
+        									<goal>exec</goal>
+        									<goal>java</goal>
+        								</goals>
+        							</pluginExecutionFilter>
+        							<action>
+        								<ignore></ignore>
+        							</action>
+        						</pluginExecution>
+        					</pluginExecutions>
+        				</lifecycleMappingMetadata>
+        			</configuration>
+        		</plugin>
+        	</plugins>
+        </pluginManagement>
+    </build>
+
+	<profiles>
+		<profile>
+			<id>generate-sources</id>
+			<properties>
+				<generate.sources.phase>generate-sources</generate.sources.phase>
+			</properties>
+		</profile>
+		<profile>
+			<id>default</id>
+			<activation>
+			   <activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<generate.sources.phase>none</generate.sources.phase>
+			</properties>
+		</profile>
+	</profiles>
+
+</project>

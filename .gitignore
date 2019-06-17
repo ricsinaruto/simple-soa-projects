@@ -1,0 +1,7 @@
+*.class
+*.jar
+*.settings
+
+target/
+libs/
+node_modules/

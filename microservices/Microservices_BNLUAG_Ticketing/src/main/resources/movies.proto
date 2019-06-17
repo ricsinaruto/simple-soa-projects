@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package movies;
+
+message Movie
+{
+	string title = 1;
+	int32 year = 2;
+	string director = 3;
+	repeated string actor = 4;
+}
+
+message MovieId
+{
+	int32 id = 1;
+}
+
+message MovieList
+{
+	repeated Movie movie = 1;
+}
+
+message MovieIdList
+{
+	repeated int32 id = 1;
+}

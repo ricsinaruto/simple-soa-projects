@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package banking;
+
+message ChargeCardRequest
+{
+	string cardNumber = 1;
+	int32 amount = 2;
+}
+
+message ChargeCardResponse
+{
+	bool success = 1;
+}

@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package ticketing;
+
+message Movie
+{
+	int32 id = 1;
+	string title = 2;
+}
+
+message Ticket
+{
+	int32 movieId = 1;
+	int32 count = 2;
+}
+
+message GetMoviesRequest
+{
+	int32 year = 1;
+}
+
+message GetMoviesResponse
+{
+	repeated Movie movie = 1;
+}
+
+message BuyTicketsRequest
+{
+	int32 movieId = 1;
+	int32 count = 2;
+	string cardNumber = 3;
+}
+
+message BuyTicketsResponse
+{
+	bool success = 1;
+}
+
+message GetTicketsRequest
+{
+}
+
+message GetTicketsResponse
+{
+	repeated Ticket ticket = 1;
+}

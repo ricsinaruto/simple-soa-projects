@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="http://www.iit.bme.hu/soi/hw/SeatReservation"
+		xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		xmlns:tns="http://www.iit.bme.hu/soi/hw/SeatReservation"
+		xmlns:ns0="http://www.iit.bme.hu/soi/hw/SeatReservation"
+		elementFormDefault="qualified">
+
+	<xs:element name="ArrayOfSeat" nillable="true" type="ns0:ArrayOfSeat"/>
+	<xs:complexType name="ArrayOfSeat">
+		<xs:sequence>
+			<xs:element name="Seat" nillable="true" type="ns0:Seat" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="Seat" nillable="true" type="ns0:Seat"/>
+	<xs:complexType name="Seat">
+		<xs:sequence>
+			<xs:element name="Row" type="xs:string" nillable="true"/>
+			<xs:element name="Column" type="xs:string" nillable="true"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="CinemaException" nillable="true" type="ns0:CinemaException"/>
+	<xs:complexType name="CinemaException">
+		<xs:sequence>
+			<xs:element name="ErrorCode" type="xs:int" />
+			<xs:element name="ErrorMessage" type="xs:string" nillable="true"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="SeatStatus" nillable="true" type="ns0:SeatStatus"/>
+	<xs:simpleType name="SeatStatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Free"/>
+			<xs:enumeration value="Locked"/>
+			<xs:enumeration value="Reserved"/>
+			<xs:enumeration value="Sold"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="Init" nillable="true" type="ns0:Init"/>
+	<xs:complexType name="Init">
+		<xs:sequence>
+			<xs:element name="rows" type="xs:int" />
+			<xs:element name="columns" type="xs:int" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="InitResponse" nillable="true" type="ns0:InitResponse"/>
+	<xs:complexType name="InitResponse">
+		<xs:sequence />
+	</xs:complexType>
+
+	<xs:element name="GetAllSeats" nillable="true" type="ns0:GetAllSeats"/>
+	<xs:complexType name="GetAllSeats">
+		<xs:sequence />
+	</xs:complexType>
+
+	<xs:element name="GetAllSeatsResponse" nillable="true" type="ns0:GetAllSeatsResponse"/>
+	<xs:complexType name="GetAllSeatsResponse">
+		<xs:sequence>
+			<xs:element name="GetAllSeatsResult" nillable="true" type="ns0:ArrayOfSeat" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="GetSeatStatus" nillable="true" type="ns0:GetSeatStatus"/>
+	<xs:complexType name="GetSeatStatus">
+		<xs:sequence>
+			<xs:element name="seat" nillable="true" type="ns0:Seat" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="GetSeatStatusResponse" nillable="true" type="ns0:GetSeatStatusResponse"/>
+	<xs:complexType name="GetSeatStatusResponse">
+		<xs:sequence>
+			<xs:element name="GetSeatStatusResult" type="ns0:SeatStatus" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="Lock" nillable="true" type="ns0:Lock"/>
+	<xs:complexType name="Lock">
+		<xs:sequence>
+			<xs:element name="seat" nillable="true" type="ns0:Seat" />
+			<xs:element name="count" type="xs:int" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="LockResponse" nillable="true" type="ns0:LockResponse"/>
+	<xs:complexType name="LockResponse">
+		<xs:sequence>
+			<xs:element name="LockResult" type="xs:string" nillable="true"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="Unlock" nillable="true" type="ns0:Unlock"/>
+	<xs:complexType name="Unlock">
+		<xs:sequence>
+			<xs:element name="lockId" type="xs:string" nillable="true"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="UnlockResponse" nillable="true" type="ns0:UnlockResponse"/>
+	<xs:complexType name="UnlockResponse">
+		<xs:sequence />
+	</xs:complexType>
+
+	<xs:element name="Reserve" nillable="true" type="ns0:Reserve"/>
+	<xs:complexType name="Reserve">
+		<xs:sequence>
+			<xs:element name="lockId" type="xs:string" nillable="true"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="ReserveResponse" nillable="true" type="ns0:ReserveResponse"/>
+	<xs:complexType name="ReserveResponse">
+		<xs:sequence />
+	</xs:complexType>
+
+	<xs:element name="Buy" nillable="true" type="ns0:Buy"/>
+	<xs:complexType name="Buy">
+		<xs:sequence>
+			<xs:element name="lockId" type="xs:string" nillable="true"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="BuyResponse" nillable="true" type="ns0:BuyResponse"/>
+	<xs:complexType name="BuyResponse">
+		<xs:sequence />
+	</xs:complexType>
+</xs:schema>
