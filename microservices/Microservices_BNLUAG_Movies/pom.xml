@@ -7,7 +7,7 @@
   
   <properties>
     <version.thorntail>2.3.0.Final</version.thorntail>
-    <version.protobuf>3.6.1</version.protobuf>
+    <version.protobuf>3.16.1</version.protobuf>
     <version.resteasy>3.6.3.Final</version.resteasy>
 	<failOnMissingWebXml>false</failOnMissingWebXml> 
     <maven.compiler.source>1.8</maven.compiler.source>
